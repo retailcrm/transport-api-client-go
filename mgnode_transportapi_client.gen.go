@@ -2233,7 +2233,7 @@ type EmptyResponse = map[string]interface{}
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	// Errors List of errors
-	Errors *[]string `json:"errors,omitempty"`
+	Errors []string `json:"errors,omitempty"`
 }
 
 // FileResponse File information

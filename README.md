@@ -49,8 +49,7 @@ if err != nil {
 }
 
 if response.JSONDefault != nil {
-    errors := *response.JSONDefault.Errors
-    log.Printf("Error: %s", errors[0])
+    log.Printf("Error: %s", response.JSONDefault.Errors[0])
 }
 
 if response.JSON200 != nil {
