@@ -1311,11 +1311,8 @@ type EditMessageRequestMessage struct {
 	Text string `binding:"required,min=1,max=65535" json:"text" mod:"trim,escape"`
 }
 
-// File defines model for File.
+// File Uploaded file information
 type File struct {
-	// Url File download URL
-	Url string `json:"Url,omitempty"`
-
 	// ID UUID of the uploaded file
 	ID openapi_types.UUID `json:"id"`
 
@@ -1327,18 +1324,9 @@ type File struct {
 
 	// Type File type
 	Type FileType `json:"type"`
-}
 
-// FileBase Base file information
-type FileBase struct {
-	// ID UUID of the uploaded file
-	ID openapi_types.UUID `json:"id"`
-
-	// Size File size (in bytes)
-	Size int `json:"size"`
-
-	// Type File type
-	Type FileType `json:"type"`
+	// Url File download URL
+	Url string `json:"url,omitempty"`
 }
 
 // FileMessageSetting File messages support
@@ -2236,7 +2224,7 @@ type ErrorResponse struct {
 	Errors []string `json:"errors,omitempty"`
 }
 
-// FileResponse File information
+// FileResponse Uploaded file information
 type FileResponse = File
 
 // MarkMessagesReadUntilResponse defines model for MarkMessagesReadUntilResponse.
@@ -2271,9 +2259,6 @@ type UpdateChannelResponse struct {
 	// UpdatedAt Date and time of last update
 	UpdatedAt time.Time `json:"updated_at" time_format:"2006-01-02T15:04:05Z07:00"`
 }
-
-// UploadFileResponse Base file information
-type UploadFileResponse = FileBase
 
 // AckMessageRequest defines model for AckMessageRequest.
 type AckMessageRequest struct {
@@ -2505,13 +2490,13 @@ type ListChannelsParams struct {
 	Types ChannelTypeQuery `binding:"omitempty,enum-valid" form:"types,omitempty" json:"types,omitempty"`
 
 	// Since Lower limit of the date of the last object update
-	Since SinceQuery `form:"since,omitempty" json:"since,omitempty" time_format:"2006-01-02T15:04:05.999999Z07:00" time_utc:"1"`
+	Since *SinceQuery `form:"since,omitempty" json:"since,omitempty" time_format:"2006-01-02T15:04:05.999999Z07:00" time_utc:"1"`
 
 	// Until Upper limit of the date of the last object update
-	Until UntilQuery `form:"until,omitempty" json:"until,omitempty" time_format:"2006-01-02T15:04:05.999999Z07:00" time_utc:"1"`
+	Until *UntilQuery `form:"until,omitempty" json:"until,omitempty" time_format:"2006-01-02T15:04:05.999999Z07:00" time_utc:"1"`
 
 	// Limit The number of elements in the response. Default value is 100
-	Limit LimitQuery `binding:"omitempty,min=1,max=1000" form:"limit,omitempty" json:"limit,omitempty"`
+	Limit *LimitQuery `binding:"omitempty,min=1,max=1000" form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // ActivateChannelJSONBody defines parameters for ActivateChannel.
@@ -3444,40 +3429,52 @@ func NewListChannelsRequest(server string, params *ListChannelsParams) (*http.Re
 			}
 		}
 
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "since", runtime.ParamLocationQuery, params.Since); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
+		if params.Since != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "since", runtime.ParamLocationQuery, *params.Since); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
 				}
 			}
+
 		}
 
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "until", runtime.ParamLocationQuery, params.Until); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
+		if params.Until != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "until", runtime.ParamLocationQuery, *params.Until); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
 				}
 			}
+
 		}
 
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, params.Limit); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
 				}
 			}
+
 		}
 
 		queryURL.RawQuery = queryValues.Encode()
@@ -4586,7 +4583,7 @@ func (r UpdateTemplateResp) StatusCode() int {
 type UploadFileResp struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *UploadFileResponse
+	JSON200      *FileResponse
 	JSONDefault  *ErrorResponse
 }
 
@@ -4609,7 +4606,7 @@ func (r UploadFileResp) StatusCode() int {
 type UploadFileByUrlResp struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *UploadFileResponse
+	JSON200      *FileResponse
 	JSONDefault  *ErrorResponse
 }
 
@@ -5467,7 +5464,7 @@ func ParseUploadFileResp(rsp *http.Response) (*UploadFileResp, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest UploadFileResponse
+		var dest FileResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -5500,7 +5497,7 @@ func ParseUploadFileByUrlResp(rsp *http.Response) (*UploadFileByUrlResp, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest UploadFileResponse
+		var dest FileResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

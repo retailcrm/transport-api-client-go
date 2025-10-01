@@ -4,6 +4,22 @@ import (
 	"errors"
 )
 
+type Err interface {
+	Error() error
+}
+
+func ExtractError(resp Err, err error) error {
+	if err != nil {
+		return err
+	}
+
+	if resp != nil && resp.Error() != nil {
+		return resp.Error()
+	}
+
+	return nil
+}
+
 func (r ListChannelsResp) Error() error {
 	if r.JSONDefault != nil {
 		return errors.New(r.JSONDefault.Errors[0])
