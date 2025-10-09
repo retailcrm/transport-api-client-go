@@ -1313,6 +1313,10 @@ type EditMessageRequestMessage struct {
 
 // File Uploaded file information
 type File struct {
+	// UrlLegacy File download URL (legacy, use `url` instead)
+	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
+	UrlLegacy string `json:"Url,omitempty"`
+
 	// ID UUID of the uploaded file
 	ID openapi_types.UUID `json:"id"`
 
