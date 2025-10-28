@@ -2485,13 +2485,13 @@ type UploadFileByUrlRequest struct {
 // ListChannelsParams defines parameters for ListChannels.
 type ListChannelsParams struct {
 	// ID Identifier of the requested object
-	ID ID `binding:"omitempty,min=1" form:"id,omitempty" json:"id,omitempty"`
+	ID *ID `binding:"omitempty,min=1" form:"id,omitempty" json:"id,omitempty"`
 
 	// Active Channel activity flag
 	Active *ChannelActiveQuery `binding:"omitempty,enum-valid" form:"active,omitempty" json:"active,omitempty"`
 
 	// Types Channel types
-	Types ChannelTypeQuery `binding:"omitempty,enum-valid" form:"types,omitempty" json:"types,omitempty"`
+	Types *ChannelTypeQuery `binding:"omitempty,enum-valid" form:"types,omitempty" json:"types,omitempty"`
 
 	// Since Lower limit of the date of the last object update
 	Since *SinceQuery `form:"since,omitempty" json:"since,omitempty" time_format:"2006-01-02T15:04:05.999999Z07:00" time_utc:"1"`
@@ -3393,16 +3393,20 @@ func NewListChannelsRequest(server string, params *ListChannelsParams) (*http.Re
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, params.ID); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
+		if params.ID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, *params.ID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
 				}
 			}
+
 		}
 
 		if params.Active != nil {
@@ -3421,16 +3425,20 @@ func NewListChannelsRequest(server string, params *ListChannelsParams) (*http.Re
 
 		}
 
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "types", runtime.ParamLocationQuery, params.Types); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
+		if params.Types != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "types", runtime.ParamLocationQuery, *params.Types); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
 				}
 			}
+
 		}
 
 		if params.Since != nil {

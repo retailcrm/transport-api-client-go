@@ -16,6 +16,7 @@ func TestListChannelsWithResponse(t *testing.T) {
 
 	active := BooleanTrue
 	channelTypes := ChannelTypeQuery{ChannelTypeTelegram, ChannelTypeWhatsapp}
+	id := 123
 
 	testCases := []struct {
 		name          string
@@ -25,16 +26,16 @@ func TestListChannelsWithResponse(t *testing.T) {
 		{
 			name: "all parameters",
 			params: &ListChannelsParams{
-				ID:     123,
+				ID:     &id,
 				Active: &active,
-				Types:  channelTypes,
+				Types:  &channelTypes,
 			},
 			expectedQuery: "active=true&id=123&types=telegram&types=whatsapp",
 		},
 		{
 			name:          "empty parameters",
 			params:        &ListChannelsParams{},
-			expectedQuery: "id=0&types=",
+			expectedQuery: "",
 		},
 	}
 
