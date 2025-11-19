@@ -169,38 +169,38 @@ func (v *ChannelType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Defines values for CustomerExternalId.
+// Defines values for CustomerExternalID.
 const (
-	CustomerExternalIdAny   CustomerExternalId = "any"
-	CustomerExternalIdPhone CustomerExternalId = "phone"
+	CustomerExternalIDAny   CustomerExternalID = "any"
+	CustomerExternalIDPhone CustomerExternalID = "phone"
 )
 
-// EnumValues returns all valid values for CustomerExternalId.
-func (CustomerExternalId) EnumValues() []string {
+// EnumValues returns all valid values for CustomerExternalID.
+func (CustomerExternalID) EnumValues() []string {
 	return []string{
-		string(CustomerExternalIdAny),
-		string(CustomerExternalIdPhone),
+		string(CustomerExternalIDAny),
+		string(CustomerExternalIDPhone),
 	}
 }
 
-// Validate validates the value of CustomerExternalId.
-func (v CustomerExternalId) ValidateEnum() error {
+// Validate validates the value of CustomerExternalID.
+func (v CustomerExternalID) ValidateEnum() error {
 	for _, value := range v.EnumValues() {
 		if string(v) == value {
 			return nil
 		}
 	}
-	return fmt.Errorf("invalid value for CustomerExternalId: %v", v)
+	return fmt.Errorf("invalid value for CustomerExternalID: %v", v)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for CustomerExternalId.
-func (v *CustomerExternalId) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for CustomerExternalID.
+func (v *CustomerExternalID) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return &json.UnmarshalTypeError{Value: err.Error()}
 	}
 
-	*v = CustomerExternalId(s)
+	*v = CustomerExternalID(s)
 	return nil
 }
 
@@ -1241,8 +1241,8 @@ type ChannelSettings struct {
 	// Audio Audio messages support
 	Audio AudioMessageSetting `json:"audio,omitempty"`
 
-	// CustomerExternalId Support for external customer identifiers
-	CustomerExternalId CustomerExternalId `json:"customer_external_id,omitempty"`
+	// CustomerExternalID Support for external customer identifiers
+	CustomerExternalID CustomerExternalID `json:"customer_external_id,omitempty"`
 
 	// File File messages support
 	File FileMessageSetting `json:"file,omitempty"`
@@ -1290,8 +1290,8 @@ type Cost struct {
 	Value float64 `binding:"gte=0" json:"value"`
 }
 
-// CustomerExternalId Support for external customer identifiers
-type CustomerExternalId string
+// CustomerExternalID Support for external customer identifiers
+type CustomerExternalID string
 
 // EditMessageRequestMessage defines model for EditMessageRequestMessage.
 type EditMessageRequestMessage struct {
@@ -2010,8 +2010,8 @@ type TemplateExampleAttachment struct {
 	// Caption Original file name
 	Caption string `json:"caption,omitempty"`
 
-	// Id UID of the uploaded file
-	Id openapi_types.UUID `json:"id"`
+	// ID UID of the uploaded file
+	ID openapi_types.UUID `json:"id"`
 }
 
 // TemplateHeader Header section of the template
@@ -2174,8 +2174,8 @@ type WAChannelStatus string
 // ChannelActiveQuery Boolean type
 type ChannelActiveQuery = Boolean
 
-// ChannelID defines model for ChannelIdPath.
-type ChannelID = int64
+// ChannelIDPath defines model for ChannelIdPath.
+type ChannelIDPath = int64
 
 // ChannelTypeQuery defines model for ChannelTypeQuery.
 type ChannelTypeQuery = []ChannelType
@@ -2242,8 +2242,8 @@ type MessageResponse = Message
 
 // SendMessageResponse defines model for SendMessageResponse.
 type SendMessageResponse struct {
-	// MessageId Identifier of the created message
-	MessageId int64 `json:"message_id"`
+	// MessageID Identifier of the created message
+	MessageID int64 `json:"message_id"`
 
 	// Time Message creation time
 	Time time.Time `json:"time"`
@@ -2854,25 +2854,25 @@ type ClientInterface interface {
 	ActivateChannel(ctx context.Context, body ActivateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeactivateChannel request
-	DeactivateChannel(ctx context.Context, channelID ChannelID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeactivateChannel(ctx context.Context, channelIDPath ChannelIDPath, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateChannelWithBody request with any body
-	UpdateChannelWithBody(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateChannelWithBody(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	UpdateChannel(ctx context.Context, channelID ChannelID, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateChannel(ctx context.Context, channelIDPath ChannelIDPath, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ActivateTemplateWithBody request with any body
-	ActivateTemplateWithBody(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ActivateTemplateWithBody(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	ActivateTemplate(ctx context.Context, channelID ChannelID, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ActivateTemplate(ctx context.Context, channelIDPath ChannelIDPath, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeactivateTemplate request
-	DeactivateTemplate(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeactivateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateTemplateWithBody request with any body
-	UpdateTemplateWithBody(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateTemplateWithBody(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	UpdateTemplate(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UploadFileWithBody request with any body
 	UploadFileWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2883,7 +2883,7 @@ type ClientInterface interface {
 	UploadFileByUrl(ctx context.Context, body UploadFileByUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetFileUrl request
-	GetFileUrl(ctx context.Context, id FileUUIDPath, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetFileUrl(ctx context.Context, fileUUIDPath FileUUIDPath, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteMessageWithBody request with any body
 	DeleteMessageWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2975,8 +2975,8 @@ func (c *Client) ActivateChannel(ctx context.Context, body ActivateChannelJSONRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeactivateChannel(ctx context.Context, channelID ChannelID, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeactivateChannelRequest(c.Server, channelID)
+func (c *Client) DeactivateChannel(ctx context.Context, channelIDPath ChannelIDPath, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeactivateChannelRequest(c.Server, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -2987,8 +2987,8 @@ func (c *Client) DeactivateChannel(ctx context.Context, channelID ChannelID, req
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateChannelWithBody(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateChannelRequestWithBody(c.Server, channelID, contentType, body)
+func (c *Client) UpdateChannelWithBody(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateChannelRequestWithBody(c.Server, channelIDPath, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2999,8 +2999,8 @@ func (c *Client) UpdateChannelWithBody(ctx context.Context, channelID ChannelID,
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateChannel(ctx context.Context, channelID ChannelID, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateChannelRequest(c.Server, channelID, body)
+func (c *Client) UpdateChannel(ctx context.Context, channelIDPath ChannelIDPath, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateChannelRequest(c.Server, channelIDPath, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3011,8 +3011,8 @@ func (c *Client) UpdateChannel(ctx context.Context, channelID ChannelID, body Up
 	return c.Client.Do(req)
 }
 
-func (c *Client) ActivateTemplateWithBody(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewActivateTemplateRequestWithBody(c.Server, channelID, contentType, body)
+func (c *Client) ActivateTemplateWithBody(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewActivateTemplateRequestWithBody(c.Server, channelIDPath, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3023,8 +3023,8 @@ func (c *Client) ActivateTemplateWithBody(ctx context.Context, channelID Channel
 	return c.Client.Do(req)
 }
 
-func (c *Client) ActivateTemplate(ctx context.Context, channelID ChannelID, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewActivateTemplateRequest(c.Server, channelID, body)
+func (c *Client) ActivateTemplate(ctx context.Context, channelIDPath ChannelIDPath, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewActivateTemplateRequest(c.Server, channelIDPath, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3035,8 +3035,8 @@ func (c *Client) ActivateTemplate(ctx context.Context, channelID ChannelID, body
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeactivateTemplate(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeactivateTemplateRequest(c.Server, channelID, templateCode)
+func (c *Client) DeactivateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeactivateTemplateRequest(c.Server, channelIDPath, templateCode)
 	if err != nil {
 		return nil, err
 	}
@@ -3047,8 +3047,8 @@ func (c *Client) DeactivateTemplate(ctx context.Context, channelID ChannelID, te
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateTemplateWithBody(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateTemplateRequestWithBody(c.Server, channelID, templateCode, contentType, body)
+func (c *Client) UpdateTemplateWithBody(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTemplateRequestWithBody(c.Server, channelIDPath, templateCode, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3059,8 +3059,8 @@ func (c *Client) UpdateTemplateWithBody(ctx context.Context, channelID ChannelID
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateTemplate(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateTemplateRequest(c.Server, channelID, templateCode, body)
+func (c *Client) UpdateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTemplateRequest(c.Server, channelIDPath, templateCode, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3107,8 +3107,8 @@ func (c *Client) UploadFileByUrl(ctx context.Context, body UploadFileByUrlJSONRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFileUrl(ctx context.Context, id FileUUIDPath, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFileUrlRequest(c.Server, id)
+func (c *Client) GetFileUrl(ctx context.Context, fileUUIDPath FileUUIDPath, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFileUrlRequest(c.Server, fileUUIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3541,12 +3541,12 @@ func NewActivateChannelRequestWithBody(server string, contentType string, body i
 }
 
 // NewDeactivateChannelRequest generates requests for DeactivateChannel
-func NewDeactivateChannelRequest(server string, channelID ChannelID) (*http.Request, error) {
+func NewDeactivateChannelRequest(server string, channelIDPath ChannelIDPath) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3575,23 +3575,23 @@ func NewDeactivateChannelRequest(server string, channelID ChannelID) (*http.Requ
 }
 
 // NewUpdateChannelRequest calls the generic UpdateChannel builder with application/json body
-func NewUpdateChannelRequest(server string, channelID ChannelID, body UpdateChannelJSONRequestBody) (*http.Request, error) {
+func NewUpdateChannelRequest(server string, channelIDPath ChannelIDPath, body UpdateChannelJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewUpdateChannelRequestWithBody(server, channelID, "application/json", bodyReader)
+	return NewUpdateChannelRequestWithBody(server, channelIDPath, "application/json", bodyReader)
 }
 
 // NewUpdateChannelRequestWithBody generates requests for UpdateChannel with any type of body
-func NewUpdateChannelRequestWithBody(server string, channelID ChannelID, contentType string, body io.Reader) (*http.Request, error) {
+func NewUpdateChannelRequestWithBody(server string, channelIDPath ChannelIDPath, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3622,23 +3622,23 @@ func NewUpdateChannelRequestWithBody(server string, channelID ChannelID, content
 }
 
 // NewActivateTemplateRequest calls the generic ActivateTemplate builder with application/json body
-func NewActivateTemplateRequest(server string, channelID ChannelID, body ActivateTemplateJSONRequestBody) (*http.Request, error) {
+func NewActivateTemplateRequest(server string, channelIDPath ChannelIDPath, body ActivateTemplateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewActivateTemplateRequestWithBody(server, channelID, "application/json", bodyReader)
+	return NewActivateTemplateRequestWithBody(server, channelIDPath, "application/json", bodyReader)
 }
 
 // NewActivateTemplateRequestWithBody generates requests for ActivateTemplate with any type of body
-func NewActivateTemplateRequestWithBody(server string, channelID ChannelID, contentType string, body io.Reader) (*http.Request, error) {
+func NewActivateTemplateRequestWithBody(server string, channelIDPath ChannelIDPath, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3669,12 +3669,12 @@ func NewActivateTemplateRequestWithBody(server string, channelID ChannelID, cont
 }
 
 // NewDeactivateTemplateRequest generates requests for DeactivateTemplate
-func NewDeactivateTemplateRequest(server string, channelID ChannelID, templateCode TemplateCodePath) (*http.Request, error) {
+func NewDeactivateTemplateRequest(server string, channelIDPath ChannelIDPath, templateCode TemplateCodePath) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3710,23 +3710,23 @@ func NewDeactivateTemplateRequest(server string, channelID ChannelID, templateCo
 }
 
 // NewUpdateTemplateRequest calls the generic UpdateTemplate builder with application/json body
-func NewUpdateTemplateRequest(server string, channelID ChannelID, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody) (*http.Request, error) {
+func NewUpdateTemplateRequest(server string, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewUpdateTemplateRequestWithBody(server, channelID, templateCode, "application/json", bodyReader)
+	return NewUpdateTemplateRequestWithBody(server, channelIDPath, templateCode, "application/json", bodyReader)
 }
 
 // NewUpdateTemplateRequestWithBody generates requests for UpdateTemplate with any type of body
-func NewUpdateTemplateRequestWithBody(server string, channelID ChannelID, templateCode TemplateCodePath, contentType string, body io.Reader) (*http.Request, error) {
+func NewUpdateTemplateRequestWithBody(server string, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "channel_id", runtime.ParamLocationPath, channelIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -3833,12 +3833,12 @@ func NewUploadFileByUrlRequestWithBody(server string, contentType string, body i
 }
 
 // NewGetFileUrlRequest generates requests for GetFileUrl
-func NewGetFileUrlRequest(server string, id FileUUIDPath) (*http.Request, error) {
+func NewGetFileUrlRequest(server string, fileUUIDPath FileUUIDPath) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, fileUUIDPath)
 	if err != nil {
 		return nil, err
 	}
@@ -4345,25 +4345,25 @@ type ClientWithResponsesInterface interface {
 	ActivateChannelWithResponse(ctx context.Context, body ActivateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*ActivateChannelResp, error)
 
 	// DeactivateChannelWithResponse request
-	DeactivateChannelWithResponse(ctx context.Context, channelID ChannelID, reqEditors ...RequestEditorFn) (*DeactivateChannelResp, error)
+	DeactivateChannelWithResponse(ctx context.Context, channelIDPath ChannelIDPath, reqEditors ...RequestEditorFn) (*DeactivateChannelResp, error)
 
 	// UpdateChannelWithBodyWithResponse request with any body
-	UpdateChannelWithBodyWithResponse(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error)
+	UpdateChannelWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error)
 
-	UpdateChannelWithResponse(ctx context.Context, channelID ChannelID, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error)
+	UpdateChannelWithResponse(ctx context.Context, channelIDPath ChannelIDPath, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error)
 
 	// ActivateTemplateWithBodyWithResponse request with any body
-	ActivateTemplateWithBodyWithResponse(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error)
+	ActivateTemplateWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error)
 
-	ActivateTemplateWithResponse(ctx context.Context, channelID ChannelID, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error)
+	ActivateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error)
 
 	// DeactivateTemplateWithResponse request
-	DeactivateTemplateWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*DeactivateTemplateResp, error)
+	DeactivateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*DeactivateTemplateResp, error)
 
 	// UpdateTemplateWithBodyWithResponse request with any body
-	UpdateTemplateWithBodyWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error)
+	UpdateTemplateWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error)
 
-	UpdateTemplateWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error)
+	UpdateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error)
 
 	// UploadFileWithBodyWithResponse request with any body
 	UploadFileWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadFileResp, error)
@@ -4374,7 +4374,7 @@ type ClientWithResponsesInterface interface {
 	UploadFileByUrlWithResponse(ctx context.Context, body UploadFileByUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*UploadFileByUrlResp, error)
 
 	// GetFileUrlWithResponse request
-	GetFileUrlWithResponse(ctx context.Context, id FileUUIDPath, reqEditors ...RequestEditorFn) (*GetFileUrlResp, error)
+	GetFileUrlWithResponse(ctx context.Context, fileUUIDPath FileUUIDPath, reqEditors ...RequestEditorFn) (*GetFileUrlResp, error)
 
 	// DeleteMessageWithBodyWithResponse request with any body
 	DeleteMessageWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteMessageResp, error)
@@ -4941,8 +4941,8 @@ func (c *ClientWithResponses) ActivateChannelWithResponse(ctx context.Context, b
 }
 
 // DeactivateChannelWithResponse request returning *DeactivateChannelResp
-func (c *ClientWithResponses) DeactivateChannelWithResponse(ctx context.Context, channelID ChannelID, reqEditors ...RequestEditorFn) (*DeactivateChannelResp, error) {
-	rsp, err := c.DeactivateChannel(ctx, channelID, reqEditors...)
+func (c *ClientWithResponses) DeactivateChannelWithResponse(ctx context.Context, channelIDPath ChannelIDPath, reqEditors ...RequestEditorFn) (*DeactivateChannelResp, error) {
+	rsp, err := c.DeactivateChannel(ctx, channelIDPath, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4950,16 +4950,16 @@ func (c *ClientWithResponses) DeactivateChannelWithResponse(ctx context.Context,
 }
 
 // UpdateChannelWithBodyWithResponse request with arbitrary body returning *UpdateChannelResp
-func (c *ClientWithResponses) UpdateChannelWithBodyWithResponse(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error) {
-	rsp, err := c.UpdateChannelWithBody(ctx, channelID, contentType, body, reqEditors...)
+func (c *ClientWithResponses) UpdateChannelWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error) {
+	rsp, err := c.UpdateChannelWithBody(ctx, channelIDPath, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseUpdateChannelResp(rsp)
 }
 
-func (c *ClientWithResponses) UpdateChannelWithResponse(ctx context.Context, channelID ChannelID, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error) {
-	rsp, err := c.UpdateChannel(ctx, channelID, body, reqEditors...)
+func (c *ClientWithResponses) UpdateChannelWithResponse(ctx context.Context, channelIDPath ChannelIDPath, body UpdateChannelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateChannelResp, error) {
+	rsp, err := c.UpdateChannel(ctx, channelIDPath, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4967,16 +4967,16 @@ func (c *ClientWithResponses) UpdateChannelWithResponse(ctx context.Context, cha
 }
 
 // ActivateTemplateWithBodyWithResponse request with arbitrary body returning *ActivateTemplateResp
-func (c *ClientWithResponses) ActivateTemplateWithBodyWithResponse(ctx context.Context, channelID ChannelID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error) {
-	rsp, err := c.ActivateTemplateWithBody(ctx, channelID, contentType, body, reqEditors...)
+func (c *ClientWithResponses) ActivateTemplateWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error) {
+	rsp, err := c.ActivateTemplateWithBody(ctx, channelIDPath, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseActivateTemplateResp(rsp)
 }
 
-func (c *ClientWithResponses) ActivateTemplateWithResponse(ctx context.Context, channelID ChannelID, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error) {
-	rsp, err := c.ActivateTemplate(ctx, channelID, body, reqEditors...)
+func (c *ClientWithResponses) ActivateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, body ActivateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*ActivateTemplateResp, error) {
+	rsp, err := c.ActivateTemplate(ctx, channelIDPath, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4984,8 +4984,8 @@ func (c *ClientWithResponses) ActivateTemplateWithResponse(ctx context.Context, 
 }
 
 // DeactivateTemplateWithResponse request returning *DeactivateTemplateResp
-func (c *ClientWithResponses) DeactivateTemplateWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*DeactivateTemplateResp, error) {
-	rsp, err := c.DeactivateTemplate(ctx, channelID, templateCode, reqEditors...)
+func (c *ClientWithResponses) DeactivateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, reqEditors ...RequestEditorFn) (*DeactivateTemplateResp, error) {
+	rsp, err := c.DeactivateTemplate(ctx, channelIDPath, templateCode, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -4993,16 +4993,16 @@ func (c *ClientWithResponses) DeactivateTemplateWithResponse(ctx context.Context
 }
 
 // UpdateTemplateWithBodyWithResponse request with arbitrary body returning *UpdateTemplateResp
-func (c *ClientWithResponses) UpdateTemplateWithBodyWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error) {
-	rsp, err := c.UpdateTemplateWithBody(ctx, channelID, templateCode, contentType, body, reqEditors...)
+func (c *ClientWithResponses) UpdateTemplateWithBodyWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error) {
+	rsp, err := c.UpdateTemplateWithBody(ctx, channelIDPath, templateCode, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseUpdateTemplateResp(rsp)
 }
 
-func (c *ClientWithResponses) UpdateTemplateWithResponse(ctx context.Context, channelID ChannelID, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error) {
-	rsp, err := c.UpdateTemplate(ctx, channelID, templateCode, body, reqEditors...)
+func (c *ClientWithResponses) UpdateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error) {
+	rsp, err := c.UpdateTemplate(ctx, channelIDPath, templateCode, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -5036,8 +5036,8 @@ func (c *ClientWithResponses) UploadFileByUrlWithResponse(ctx context.Context, b
 }
 
 // GetFileUrlWithResponse request returning *GetFileUrlResp
-func (c *ClientWithResponses) GetFileUrlWithResponse(ctx context.Context, id FileUUIDPath, reqEditors ...RequestEditorFn) (*GetFileUrlResp, error) {
-	rsp, err := c.GetFileUrl(ctx, id, reqEditors...)
+func (c *ClientWithResponses) GetFileUrlWithResponse(ctx context.Context, fileUUIDPath FileUUIDPath, reqEditors ...RequestEditorFn) (*GetFileUrlResp, error) {
+	rsp, err := c.GetFileUrl(ctx, fileUUIDPath, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
