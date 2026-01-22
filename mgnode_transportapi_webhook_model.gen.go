@@ -210,6 +210,43 @@ func (v *WebhookMessageUpdatedType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Defines values for WebhookTemplateCategory.
+const (
+	WebhookTemplateCategoryAuthentication WebhookTemplateCategory = "authentication"
+	WebhookTemplateCategoryMarketing      WebhookTemplateCategory = "marketing"
+	WebhookTemplateCategoryUtility        WebhookTemplateCategory = "utility"
+)
+
+// EnumValues returns all valid values for WebhookTemplateCategory.
+func (WebhookTemplateCategory) EnumValues() []string {
+	return []string{
+		string(WebhookTemplateCategoryAuthentication),
+		string(WebhookTemplateCategoryMarketing),
+		string(WebhookTemplateCategoryUtility),
+	}
+}
+
+// Validate validates the value of WebhookTemplateCategory.
+func (v WebhookTemplateCategory) ValidateEnum() error {
+	for _, value := range v.EnumValues() {
+		if string(v) == value {
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid value for WebhookTemplateCategory: %v", v)
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for WebhookTemplateCategory.
+func (v *WebhookTemplateCategory) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return &json.UnmarshalTypeError{Value: err.Error()}
+	}
+
+	*v = WebhookTemplateCategory(s)
+	return nil
+}
+
 // Defines values for WebhookTemplateCreateType.
 const (
 	WebhookTemplateCreateTypeTemplateCreate WebhookTemplateCreateType = "template_create"
@@ -766,6 +803,9 @@ type WebhookTemplateButtonArguments struct {
 	Type TemplateButtonType `json:"type"`
 }
 
+// WebhookTemplateCategory Category of the template
+type WebhookTemplateCategory string
+
 // WebhookTemplateContent Represents the content of a chat template
 type WebhookTemplateContent struct {
 	// Body Body content of the template
@@ -905,6 +945,9 @@ type WebhookTemplateInfo struct {
 	// Args Template arguments
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Args []string `json:"args,omitempty"`
+
+	// Category Category of the template
+	Category *WebhookTemplateCategory `json:"category,omitempty"`
 
 	// Code Template code
 	Code      string                   `json:"code,omitempty"`
