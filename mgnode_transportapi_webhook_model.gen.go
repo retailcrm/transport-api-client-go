@@ -709,6 +709,9 @@ type WebhookMessageUpdatedType string
 
 // WebhookMessageUpdatedData defines model for WebhookMessageUpdatedData.
 type WebhookMessageUpdatedData struct {
+	// Attachments Transport attachments
+	Attachments *MessageTransportAttachments `json:"attachments,omitempty"`
+
 	// ChannelID Channel identifier
 	ChannelID int64 `json:"channel_id"`
 
