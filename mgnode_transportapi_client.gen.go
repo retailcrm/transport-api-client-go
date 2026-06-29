@@ -1333,7 +1333,7 @@ type ChannelType string
 // Cost Represents a monetary value with its corresponding currency
 type Cost struct {
 	// Currency Currency code
-	Currency string `binding:"required,currency" json:"currency"`
+	Currency string `binding:"required,currency" json:"currency" mod:"trim,escape"`
 
 	// Value Numerical value of the cost
 	Value float64 `binding:"gte=0" json:"value"`
@@ -1594,7 +1594,7 @@ type MessageOrder struct {
 	Items []MessageOrderItem `json:"items,omitempty"`
 
 	// Number Order number
-	Number string `binding:"max=255" json:"number,omitempty"`
+	Number string `binding:"max=255" json:"number,omitempty" mod:"trim,escape"`
 
 	// Payments Payments array
 	Payments []MessageOrderPayment `json:"payments,omitempty"`
@@ -1603,19 +1603,19 @@ type MessageOrder struct {
 	Status *MessageOrderStatus `json:"status,omitempty"`
 
 	// Url Order URL
-	Url string `binding:"max=2048" json:"url,omitempty"`
+	Url string `binding:"max=2048" json:"url,omitempty" mod:"trim,escape"`
 }
 
 // MessageOrderDelivery Order delivery information
 type MessageOrderDelivery struct {
 	// Address Delivery address
-	Address string `json:"address,omitempty"`
+	Address string `json:"address,omitempty" mod:"trim,escape"`
 
 	// Comment Delivery comment
-	Comment string `json:"comment,omitempty"`
+	Comment string `json:"comment,omitempty" mod:"trim,escape"`
 
 	// Name Delivery method name
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" mod:"trim,escape"`
 
 	// Price Represents a monetary value with its corresponding currency
 	Price *Cost `json:"price,omitempty"`
@@ -1627,17 +1627,17 @@ type MessageOrderItem struct {
 	ExternalID int64 `json:"external_id,omitempty"`
 
 	// Img Product image
-	Img string `binding:"max=2048" json:"img,omitempty"`
+	Img string `binding:"max=2048" json:"img,omitempty" mod:"trim,escape"`
 
 	// Name Product name
-	Name string `binding:"max=255" json:"name,omitempty"`
+	Name string `binding:"max=255" json:"name,omitempty" mod:"trim,escape"`
 
 	// Price Represents a monetary value with its corresponding currency
 	Price    *Cost    `json:"price,omitempty"`
 	Quantity Quantity `json:"quantity,omitempty"`
 
 	// Url Product URL
-	Url string `binding:"max=2048" json:"url,omitempty"`
+	Url string `binding:"max=2048" json:"url,omitempty" mod:"trim,escape"`
 }
 
 // MessageOrderPayment Order payment information
@@ -1646,7 +1646,7 @@ type MessageOrderPayment struct {
 	Amount *Cost `json:"amount,omitempty"`
 
 	// Name Payment name
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" mod:"trim,escape"`
 
 	// Status Order payment status
 	Status *MessageOrderPaymentStatus `json:"status,omitempty"`
@@ -1655,7 +1655,7 @@ type MessageOrderPayment struct {
 // MessageOrderPaymentStatus Order payment status
 type MessageOrderPaymentStatus struct {
 	// Name Payment name
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" mod:"trim,escape"`
 
 	// Payed Payment execution indicator
 	Payed *bool `json:"payed,omitempty"`
@@ -1666,7 +1666,7 @@ type MessageOrderStatus struct {
 	Code MessageOrderStatusCode `binding:"enum-valid" json:"code,omitempty"`
 
 	// Name Status name
-	Name string `binding:"max=255" json:"name,omitempty"`
+	Name string `binding:"max=255" json:"name,omitempty" mod:"trim,escape"`
 }
 
 // MessageOrderStatusCode Status code
@@ -1675,7 +1675,7 @@ type MessageOrderStatusCode string
 // MessageProduct Describes a product mentioned in a message
 type MessageProduct struct {
 	// Article Product description
-	Article string `binding:"max=128" json:"article,omitempty"`
+	Article string `binding:"max=128" json:"article,omitempty" mod:"trim,escape"`
 
 	// Cost Represents a monetary value with its corresponding currency
 	Cost *Cost `json:"cost,omitempty"`
@@ -1684,16 +1684,16 @@ type MessageProduct struct {
 	ID uint64 `json:"id"`
 
 	// Img Product image URL
-	Img string `binding:"max=2048" json:"img,omitempty"`
+	Img string `binding:"max=2048" json:"img,omitempty" mod:"trim,escape"`
 
 	// Name Product name
-	Name string `binding:"required,min=1,max=255" json:"name"`
+	Name string `binding:"required,min=1,max=255" json:"name" mod:"trim,escape"`
 
 	// Unit Units of measure of the product
-	Unit string `binding:"max=16" json:"unit"`
+	Unit string `binding:"max=16" json:"unit" mod:"trim,escape"`
 
 	// Url Product URL
-	Url string `binding:"max=2048" json:"url,omitempty"`
+	Url string `binding:"max=2048" json:"url,omitempty" mod:"trim,escape"`
 }
 
 // MessageScope Message scope
@@ -1753,7 +1753,7 @@ type ProductMessageSetting struct {
 // Quantity Quantity
 type Quantity struct {
 	// Unit Units of measure
-	Unit string `binding:"max=16" json:"unit,omitempty"`
+	Unit string `binding:"max=16" json:"unit,omitempty" mod:"trim,escape"`
 
 	// Value Quantitative value
 	Value float64 `binding:"gte=0" json:"value,omitempty"`
@@ -1823,7 +1823,7 @@ type SendMessageRequestCustomer struct {
 	ProfileURL *string `json:"profile_url" mod:"trim,escape"`
 
 	// SecondaryExternalIDs Array of additional external customer identifiers
-	SecondaryExternalIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_ids"`
+	SecondaryExternalIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_ids" mod:"trim,escape"`
 	Utm                  *Utm     `json:"utm"`
 }
 
@@ -1833,7 +1833,7 @@ type SendMessageRequestMessage struct {
 	CreatedAt *time.Time `binding:"omitempty" json:"created_at"`
 
 	// ExternalID External identifier of a message
-	ExternalID *string `binding:"omitempty,min=0,max=255" json:"external_id"`
+	ExternalID *string `binding:"omitempty,min=0,max=255" json:"external_id" mod:"trim,escape"`
 
 	// Items List of media objects in a message
 	Items []SendMessageRequestMessageFileItem `binding:"omitempty,min=1,max=20,dive" json:"items"`
@@ -1843,11 +1843,11 @@ type SendMessageRequestMessage struct {
 	Order *MessageOrder `binding:"required_if=Type order" json:"order,omitempty"`
 
 	// PageLink Link to the page from which the message was sent
-	PageLink *string         `binding:"omitempty,web_url_length,web_url" json:"page_link,omitempty"`
+	PageLink *string         `binding:"omitempty,web_url_length,web_url" json:"page_link,omitempty" mod:"trim,escape"`
 	Product  *MessageProduct `binding:"required_if=Type product" json:"product,omitempty"`
 
 	// Text Message text
-	Text string      `binding:"min=0,max=65535" json:"text"`
+	Text string      `binding:"min=0,max=65535" json:"text" mod:"trim,escape"`
 	Type MessageType `binding:"required,enum-valid" json:"type"`
 }
 
@@ -1865,7 +1865,7 @@ type SendingError struct {
 	Code SendingErrorCode `binding:"enum-valid" json:"code"`
 
 	// ExternalCode External error code
-	ExternalCode *string `binding:"omitempty,max=100" json:"external_code,omitempty"`
+	ExternalCode *string `binding:"omitempty,max=100" json:"external_code,omitempty" mod:"trim,escape"`
 
 	// Message Description of the error that occurred while sending
 	Message string `json:"message" mod:"trim,escape"`
@@ -2022,16 +2022,16 @@ type TemplateBase struct {
 // TemplateButton Template button
 type TemplateButton struct {
 	// Label Button name
-	Label string `json:"label"`
+	Label string `json:"label" mod:"trim,escape"`
 
 	// Phone Phone number (for button type `phone`)
-	Phone *string `json:"phone,omitempty"`
+	Phone *string `json:"phone,omitempty" mod:"trim,escape"`
 
 	// Type Button type
 	Type TemplateButtonType `json:"type"`
 
 	// Url URL address (for button type `url`)
-	Url *string `json:"url,omitempty"`
+	Url *string `json:"url,omitempty" mod:"trim,escape"`
 }
 
 // TemplateButtonType Button type
@@ -2074,7 +2074,7 @@ type TemplateHeader struct {
 // TemplateHeaderContent Template header content
 type TemplateHeaderContent struct {
 	// Body Text content of the header section (for content type `text`)
-	Body string `json:"body,omitempty"`
+	Body string `json:"body,omitempty" mod:"trim,escape"`
 
 	// Type Header section type
 	Type TemplateHeaderContentType `json:"type"`
@@ -2086,7 +2086,7 @@ type TemplateHeaderContentType string
 // TemplateItem Template item
 type TemplateItem struct {
 	// Text Text of the template item (for type `text`)
-	Text string           `json:"text,omitempty"`
+	Text string           `json:"text,omitempty" mod:"trim,escape"`
 	Type TemplateItemType `json:"-"`
 
 	// VarType Template variable (for type `var`)
@@ -2198,19 +2198,19 @@ type UserType string
 // Utm UTM parameters for tracking marketing campaigns
 type Utm struct {
 	// Campaign Campaign
-	Campaign *string `binding:"omitempty,min=1,max=255" json:"campaign,omitempty"`
+	Campaign *string `binding:"omitempty,min=1,max=255" json:"campaign,omitempty" mod:"trim,escape"`
 
 	// Content Ad content
-	Content *string `binding:"omitempty,min=1,max=255" json:"content,omitempty"`
+	Content *string `binding:"omitempty,min=1,max=255" json:"content,omitempty" mod:"trim,escape"`
 
 	// Medium Medium
-	Medium *string `binding:"omitempty,min=1,max=255" json:"medium,omitempty"`
+	Medium *string `binding:"omitempty,min=1,max=255" json:"medium,omitempty" mod:"trim,escape"`
 
 	// Source Source
-	Source *string `binding:"omitempty,min=1,max=255" json:"source,omitempty"`
+	Source *string `binding:"omitempty,min=1,max=255" json:"source,omitempty" mod:"trim,escape"`
 
 	// Term Keyword
-	Term *string `binding:"omitempty,min=1,max=255" json:"term,omitempty"`
+	Term *string `binding:"omitempty,min=1,max=255" json:"term,omitempty" mod:"trim,escape"`
 }
 
 // WAChannelProperties WhatsApp channel properties
@@ -2397,7 +2397,7 @@ type AddReactionRequest struct {
 	Message MessageIdentifier `binding:"required" json:"message"`
 
 	// Reaction Removable reaction
-	Reaction string `binding:"required" json:"reaction"`
+	Reaction string `binding:"required" json:"reaction" mod:"trim,escape"`
 }
 
 // DeleteMessageRequest defines model for DeleteMessageRequest.
@@ -2414,7 +2414,7 @@ type DeleteReactionRequest struct {
 	Message MessageIdentifier `binding:"required" json:"message"`
 
 	// Reaction Removable reaction
-	Reaction *string `binding:"omitempty" json:"reaction"`
+	Reaction *string `binding:"omitempty" json:"reaction" mod:"trim,escape"`
 }
 
 // EditMessageRequest defines model for EditMessageRequest.
@@ -2457,7 +2457,7 @@ type SendHistoryMessageRequest struct {
 	Customer  *SendMessageRequestCustomer `binding:"required" json:"customer"`
 
 	// ExternalChatID External identifier
-	ExternalChatID string                    `binding:"omitempty,min=0,max=64" json:"external_chat_id"`
+	ExternalChatID string                    `binding:"omitempty,min=0,max=64" json:"external_chat_id" mod:"trim,escape"`
 	Message        SendMessageRequestMessage `binding:"required" json:"message"`
 	Originator     Originator                `binding:"omitempty,enum-valid" json:"originator"`
 	Quote          *MessageIdentifier        `binding:"omitempty" json:"quote"`
@@ -2473,7 +2473,7 @@ type SendMessageRequest struct {
 	Customer *SendMessageRequestCustomer `binding:"omitempty" json:"customer"`
 
 	// ExternalChatID External identifier
-	ExternalChatID string                    `binding:"min=0,max=64" json:"external_chat_id"`
+	ExternalChatID string                    `binding:"min=0,max=64" json:"external_chat_id" mod:"trim,escape"`
 	Message        SendMessageRequestMessage `binding:"required" json:"message"`
 	Originator     Originator                `binding:"enum-valid" json:"originator"`
 	Quote          *MessageIdentifier        `json:"quote"`
@@ -2482,7 +2482,7 @@ type SendMessageRequest struct {
 	ReplyDeadline *time.Time `binding:"omitempty" json:"reply_deadline"`
 
 	// SecondaryExternalChatIDs Array of additional external chat identifiers
-	SecondaryExternalChatIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_chat_ids"`
+	SecondaryExternalChatIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_chat_ids" mod:"trim,escape"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	User *SendMessageRequestCustomer `binding:"omitempty" json:"user"`
 }
@@ -2676,7 +2676,7 @@ type SendMessageJSONBody struct {
 	Customer *SendMessageRequestCustomer `binding:"omitempty" json:"customer"`
 
 	// ExternalChatID External identifier
-	ExternalChatID string                    `binding:"min=0,max=64" json:"external_chat_id"`
+	ExternalChatID string                    `binding:"min=0,max=64" json:"external_chat_id" mod:"trim,escape"`
 	Message        SendMessageRequestMessage `binding:"required" json:"message"`
 	Originator     Originator                `binding:"enum-valid" json:"originator"`
 	Quote          *MessageIdentifier        `json:"quote"`
@@ -2685,7 +2685,7 @@ type SendMessageJSONBody struct {
 	ReplyDeadline *time.Time `binding:"omitempty" json:"reply_deadline"`
 
 	// SecondaryExternalChatIDs Array of additional external chat identifiers
-	SecondaryExternalChatIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_chat_ids"`
+	SecondaryExternalChatIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_chat_ids" mod:"trim,escape"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	User *SendMessageRequestCustomer `binding:"omitempty" json:"user"`
 }
@@ -2724,7 +2724,7 @@ type SendHistoryMessageJSONBody struct {
 	Customer  *SendMessageRequestCustomer `binding:"required" json:"customer"`
 
 	// ExternalChatID External identifier
-	ExternalChatID string                    `binding:"omitempty,min=0,max=64" json:"external_chat_id"`
+	ExternalChatID string                    `binding:"omitempty,min=0,max=64" json:"external_chat_id" mod:"trim,escape"`
 	Message        SendMessageRequestMessage `binding:"required" json:"message"`
 	Originator     Originator                `binding:"omitempty,enum-valid" json:"originator"`
 	Quote          *MessageIdentifier        `binding:"omitempty" json:"quote"`
@@ -2740,7 +2740,7 @@ type DeleteMessageReactionJSONBody struct {
 	Message MessageIdentifier `binding:"required" json:"message"`
 
 	// Reaction Removable reaction
-	Reaction *string `binding:"omitempty" json:"reaction"`
+	Reaction *string `binding:"omitempty" json:"reaction" mod:"trim,escape"`
 }
 
 // AddMessageReactionJSONBody defines parameters for AddMessageReaction.
@@ -2750,7 +2750,7 @@ type AddMessageReactionJSONBody struct {
 	Message MessageIdentifier `binding:"required" json:"message"`
 
 	// Reaction Removable reaction
-	Reaction string `binding:"required" json:"reaction"`
+	Reaction string `binding:"required" json:"reaction" mod:"trim,escape"`
 }
 
 // MarkMessageReadJSONBody defines parameters for MarkMessageRead.
