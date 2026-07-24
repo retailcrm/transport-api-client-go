@@ -114,6 +114,7 @@ const (
 	ChannelTypeOzon          ChannelType = "ozon"
 	ChannelTypeSkype         ChannelType = "skype"
 	ChannelTypeTelegram      ChannelType = "telegram"
+	ChannelTypeTiktok        ChannelType = "tiktok"
 	ChannelTypeViber         ChannelType = "viber"
 	ChannelTypeVk            ChannelType = "vk"
 	ChannelTypeWhatsapp      ChannelType = "whatsapp"
@@ -138,6 +139,7 @@ func (ChannelType) EnumValues() []string {
 		string(ChannelTypeOzon),
 		string(ChannelTypeSkype),
 		string(ChannelTypeTelegram),
+		string(ChannelTypeTiktok),
 		string(ChannelTypeViber),
 		string(ChannelTypeVk),
 		string(ChannelTypeWhatsapp),
@@ -173,6 +175,7 @@ func (v *ChannelType) UnmarshalJSON(data []byte) error {
 const (
 	CustomerExternalIDAny   CustomerExternalID = "any"
 	CustomerExternalIDPhone CustomerExternalID = "phone"
+	CustomerExternalIDUid   CustomerExternalID = "uid"
 )
 
 // EnumValues returns all valid values for CustomerExternalID.
@@ -180,6 +183,7 @@ func (CustomerExternalID) EnumValues() []string {
 	return []string{
 		string(CustomerExternalIDAny),
 		string(CustomerExternalIDPhone),
+		string(CustomerExternalIDUid),
 	}
 }
 
@@ -1242,6 +1246,48 @@ func (v *WAChannelStatus) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// AckMessageChat Chat identity resolved by transport while acknowledging a deferred outgoing message
+type AckMessageChat struct {
+	// ExternalID Primary external chat identifier
+	ExternalID string `binding:"required,min=1,max=64" json:"external_id" mod:"trim,escape"`
+
+	// SecondaryExternalIDs Additional external chat identifiers
+	SecondaryExternalIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_ids,omitempty" mod:"trim,escape"`
+}
+
+// AckMessageCustomer Customer identity resolved by transport while acknowledging a deferred outgoing message
+type AckMessageCustomer struct {
+	// Avatar Customer avatar URL
+	Avatar *string `json:"avatar,omitempty" mod:"trim,escape"`
+
+	// Country Customer country code
+	Country *string `json:"country,omitempty" mod:"trim,escape"`
+
+	// Email Customer email
+	Email *string `json:"email,omitempty" mod:"trim,escape"`
+
+	// ExternalID Primary external customer identifier
+	ExternalID string `binding:"required,min=1,max=64" json:"external_id" mod:"trim,escape"`
+
+	// FirstName Customer first name
+	FirstName *string `binding:"omitempty,max=255" json:"first_name,omitempty" mod:"trim,escape"`
+
+	// Language Customer language
+	Language *string `json:"language,omitempty" mod:"trim,escape"`
+
+	// LastName Customer last name
+	LastName *string `binding:"omitempty,max=255" json:"last_name,omitempty" mod:"trim,escape"`
+
+	// Phone Customer phone number if known
+	Phone *string `binding:"omitempty,max=16" json:"phone,omitempty" mod:"trim,escape"`
+
+	// ProfileUrl Customer profile URL
+	ProfileUrl *string `json:"profile_url,omitempty" mod:"trim,escape"`
+
+	// SecondaryExternalIDs Additional customer identifiers, for example wa_id
+	SecondaryExternalIDs []string `binding:"omitempty,dive,min=0,max=64" json:"secondary_external_ids,omitempty" mod:"trim,escape"`
+}
+
 // AudioMessageSetting Audio messages support
 type AudioMessageSetting struct {
 	// Creating Support for operation with messages of the given type
@@ -1292,6 +1338,9 @@ type ChannelSettings struct {
 
 	// CustomerExternalID Support for external customer identifiers
 	CustomerExternalID CustomerExternalID `json:"customer_external_id,omitempty"`
+
+	// DeferredPhoneTemplateSend Send phone template messages through deferred identity resolution
+	DeferredPhoneTemplateSend bool `json:"deferred_phone_template_send,omitempty"`
 
 	// File File messages support
 	File FileMessageSetting `json:"file,omitempty"`
@@ -2103,6 +2152,9 @@ type TemplateQuality string
 type TemplateSetting struct {
 	// Creation Support for creating templates in the system
 	Creation bool `json:"creation,omitempty"`
+
+	// Sending Support for sending templates from the system
+	Sending bool `json:"sending,omitempty"`
 }
 
 // TemplateType Template type
@@ -2322,11 +2374,13 @@ type UpdateChannelResponse struct {
 // AckMessageRequest defines model for AckMessageRequest.
 type AckMessageRequest struct {
 	// Channel Sending channel identifier
-	Channel int64 `binding:"required" json:"channel"`
+	Channel int64           `binding:"required" json:"channel"`
+	Chat    *AckMessageChat `json:"chat"`
 
 	// CreatedAt Date and time of sending
-	CreatedAt *time.Time    `json:"created_at"`
-	Error     *SendingError `json:"error"`
+	CreatedAt *time.Time          `json:"created_at"`
+	Customer  *AckMessageCustomer `json:"customer"`
+	Error     *SendingError       `json:"error"`
 
 	// ExternalMessageID External identifier of a message
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
@@ -2700,11 +2754,13 @@ type EditMessageJSONBody struct {
 // AckMessageJSONBody defines parameters for AckMessage.
 type AckMessageJSONBody struct {
 	// Channel Sending channel identifier
-	Channel int64 `binding:"required" json:"channel"`
+	Channel int64           `binding:"required" json:"channel"`
+	Chat    *AckMessageChat `json:"chat"`
 
 	// CreatedAt Date and time of sending
-	CreatedAt *time.Time    `json:"created_at"`
-	Error     *SendingError `json:"error"`
+	CreatedAt *time.Time          `json:"created_at"`
+	Customer  *AckMessageCustomer `json:"customer"`
+	Error     *SendingError       `json:"error"`
 
 	// ExternalMessageID External identifier of a message
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set

@@ -663,8 +663,8 @@ type WebhookMessageSentData struct {
 	// ExternalUserID External identifier of the user
 	ExternalUserID string `json:"external_user_id"`
 
-	// ID Unique identifier of the message in MessageGateway
-	ID int64 `json:"id"`
+	// ID Unique identifier of the message in MessageGateway. May be absent for deferred message sends before MessageGateway message acknowledgement.
+	ID *int64 `json:"id,omitempty"`
 
 	// InAppID System identifier for the message
 	InAppID *int32 `json:"in_app_id,omitempty"`
