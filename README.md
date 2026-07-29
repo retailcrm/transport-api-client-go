@@ -12,6 +12,8 @@ go get github.com/retailcrm/transport-api-client-go
 
 ### Initializing the Client
 
+Requests use `User-Agent: retailcrm-transport-api-client-go/<version>` by default. The version is resolved from Go build information for the client dependency. Pass `WithUserAgent` to override it.
+
 ```go
 package main
 
@@ -274,4 +276,3 @@ This middleware:
 * **Before**: generates a unique request ID, stores it in the request context, and sets the `X-Request-ID` header.
 * **Do**: forwards the request to the next handler.
 * **After**: logs the outcome together with the request ID.
-
