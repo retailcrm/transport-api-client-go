@@ -441,6 +441,57 @@ func TestSendMessageWithResponse(t *testing.T) {
 	assert.Equal(t, 201, resp.StatusCode())
 }
 
+func TestExtractErrorWithEmptyErrorList(t *testing.T) {
+	testCases := []struct {
+		name          string
+		statusCode    int
+		errorResponse *ErrorResponse
+		expectedError string
+		rateLimited   bool
+	}{
+		{
+			name:        "rate limit response",
+			statusCode:  http.StatusTooManyRequests,
+			rateLimited: true,
+		},
+		{
+			name:          "empty error object",
+			statusCode:    http.StatusInternalServerError,
+			errorResponse: &ErrorResponse{},
+			expectedError: "unexpected HTTP status: 500",
+		},
+		{
+			name:       "empty error list",
+			statusCode: http.StatusBadRequest,
+			errorResponse: &ErrorResponse{
+				Errors: []string{},
+			},
+			expectedError: "unexpected HTTP status: 400",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			response := SendMessageResp{
+				HTTPResponse: &http.Response{
+					StatusCode: tc.statusCode,
+					Header:     make(http.Header),
+				},
+				JSONDefault: tc.errorResponse,
+			}
+
+			err := ExtractError(response, nil)
+
+			require.Error(t, err)
+			if tc.rateLimited {
+				require.IsType(t, &RateLimitError{}, err)
+				return
+			}
+			assert.EqualError(t, err, tc.expectedError)
+		})
+	}
+}
+
 func TestSendMessageWithBodyWithResponse(t *testing.T) {
 	t.Parallel()
 

@@ -640,7 +640,7 @@ type WebhookMessageSent struct {
 // WebhookMessageSentType defines model for WebhookMessageSent.Type.
 type WebhookMessageSentType string
 
-// WebhookMessageSentData defines model for WebhookMessageSentData.
+// WebhookMessageSentData Webhook event data for a message being sent
 type WebhookMessageSentData struct {
 	// Attachments Transport attachments
 	Attachments *MessageTransportAttachments `json:"attachments,omitempty"`
@@ -657,8 +657,8 @@ type WebhookMessageSentData struct {
 	// Customer Represents customer data in the webhook
 	Customer *WebhookCustomerData `json:"customer,omitempty"`
 
-	// ExternalChatID External identifier of the chat
-	ExternalChatID string `json:"external_chat_id"`
+	// ExternalChatID External identifier of the chat. May be absent for deferred phone sends before MessageGateway creates the chat from acknowledgement data.
+	ExternalChatID *string `json:"external_chat_id,omitempty"`
 
 	// ExternalUserID External identifier of the user
 	ExternalUserID string `json:"external_user_id"`

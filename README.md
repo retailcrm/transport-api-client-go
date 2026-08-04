@@ -121,6 +121,28 @@ func sentMessageHandler(c *gin.Context, data WebhookMessageSent) {
 
 ### Client with Logging and Rate Limiting
 
+#### Rate limiters
+
+The library provides two built-in rate limiters. Configure one of them with the corresponding middleware.
+
+- **Recommended:** `NewHeaderRateLimiter(initialLimit)` follows the server's `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers. Before the first response with valid headers, it uses `initialLimit`; the server headers then replace it. It reserves available slots for concurrent requests and waits for the reset time when the current window is exhausted. Use it when the API is the source of truth for the limit.
+- `NewDefaultLimiter(rate, burst)` creates a local token-bucket limiter. It limits the average request rate to `rate` requests per second and permits short bursts of up to `burst` requests. Use it only when server rate-limit headers are unavailable and the request rate is known by the client.
+
+Do not combine the two limiters for the same request flow: they enforce different policies and would both delay requests.
+
+#### Server header limiter
+
+```go
+limiter := transport_api_client.NewHeaderRateLimiter(70)
+
+client, err := transport_api_client.NewClientWithResponses(
+    "https://mg-s1.retailcrm.pro/api/transport/v1/",
+    transport_api_client.WithMiddlewares(
+		transport_api_client.Limiter(limiter),
+    ),
+)
+```
+
 The library supports **middleware** to wrap HTTP requests.
 Typical use cases are logging and rate limiting, but you can also implement your own (e.g. retries, tracing, headers injection).
 
