@@ -3,6 +3,7 @@ module github.com/retailcrm/transport-api-client-go
 go 1.25.0
 
 require (
+	github.com/oapi-codegen/nullable v1.2.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/time v0.15.0

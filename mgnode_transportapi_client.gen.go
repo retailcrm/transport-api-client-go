@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/oapi-codegen/nullable"
 	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
@@ -333,15 +334,16 @@ func (v *MessageAction) UnmarshalJSON(data []byte) error {
 
 // Defines values for MessageErrorCode.
 const (
-	MessageErrorCodeAccessRestricted  MessageErrorCode = "access_restricted"
-	MessageErrorCodeAsyncSendTimeout  MessageErrorCode = "async_send_timeout"
-	MessageErrorCodeCustomerNotExists MessageErrorCode = "customer_not_exists"
-	MessageErrorCodeGeneral           MessageErrorCode = "general"
-	MessageErrorCodeMalformedResponse MessageErrorCode = "malformed_response"
-	MessageErrorCodeNetworkError      MessageErrorCode = "network_error"
-	MessageErrorCodeReplyTimedOut     MessageErrorCode = "reply_timed_out"
-	MessageErrorCodeSpamSuspicion     MessageErrorCode = "spam_suspicion"
-	MessageErrorCodeUnknown           MessageErrorCode = "unknown"
+	MessageErrorCodeAccessRestricted    MessageErrorCode = "access_restricted"
+	MessageErrorCodeAsyncSendTimeout    MessageErrorCode = "async_send_timeout"
+	MessageErrorCodeCustomerNotExists   MessageErrorCode = "customer_not_exists"
+	MessageErrorCodeGeneral             MessageErrorCode = "general"
+	MessageErrorCodeInsufficientBalance MessageErrorCode = "insufficient_balance"
+	MessageErrorCodeMalformedResponse   MessageErrorCode = "malformed_response"
+	MessageErrorCodeNetworkError        MessageErrorCode = "network_error"
+	MessageErrorCodeReplyTimedOut       MessageErrorCode = "reply_timed_out"
+	MessageErrorCodeSpamSuspicion       MessageErrorCode = "spam_suspicion"
+	MessageErrorCodeUnknown             MessageErrorCode = "unknown"
 )
 
 // EnumValues returns all valid values for MessageErrorCode.
@@ -351,6 +353,7 @@ func (MessageErrorCode) EnumValues() []string {
 		string(MessageErrorCodeAsyncSendTimeout),
 		string(MessageErrorCodeCustomerNotExists),
 		string(MessageErrorCodeGeneral),
+		string(MessageErrorCodeInsufficientBalance),
 		string(MessageErrorCodeMalformedResponse),
 		string(MessageErrorCodeNetworkError),
 		string(MessageErrorCodeReplyTimedOut),
@@ -587,6 +590,39 @@ func (v *Originator) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Defines values for OutgoingBlockReason.
+const (
+	OutgoingBlockReasonInsufficientBalance OutgoingBlockReason = "insufficient_balance"
+)
+
+// EnumValues returns all valid values for OutgoingBlockReason.
+func (OutgoingBlockReason) EnumValues() []string {
+	return []string{
+		string(OutgoingBlockReasonInsufficientBalance),
+	}
+}
+
+// Validate validates the value of OutgoingBlockReason.
+func (v OutgoingBlockReason) ValidateEnum() error {
+	for _, value := range v.EnumValues() {
+		if string(v) == value {
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid value for OutgoingBlockReason: %v", v)
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for OutgoingBlockReason.
+func (v *OutgoingBlockReason) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return &json.UnmarshalTypeError{Value: err.Error()}
+	}
+
+	*v = OutgoingBlockReason(s)
+	return nil
+}
+
 // Defines values for RejectReason.
 const (
 	RejectReasonAbusiveContent    RejectReason = "abusive_content"
@@ -742,6 +778,7 @@ func (v *SendingPolicyNewCustomer) UnmarshalJSON(data []byte) error {
 // Defines values for SendingPolicyOutgoing.
 const (
 	SendingPolicyOutgoingAllowed    SendingPolicyOutgoing = "allowed"
+	SendingPolicyOutgoingBlocked    SendingPolicyOutgoing = "blocked"
 	SendingPolicyOutgoingRestricted SendingPolicyOutgoing = "restricted"
 )
 
@@ -749,6 +786,7 @@ const (
 func (SendingPolicyOutgoing) EnumValues() []string {
 	return []string{
 		string(SendingPolicyOutgoingAllowed),
+		string(SendingPolicyOutgoingBlocked),
 		string(SendingPolicyOutgoingRestricted),
 	}
 }
@@ -776,10 +814,11 @@ func (v *SendingPolicyOutgoing) UnmarshalJSON(data []byte) error {
 
 // Defines values for SuggestionType.
 const (
-	SuggestionTypeEmail SuggestionType = "email"
-	SuggestionTypePhone SuggestionType = "phone"
-	SuggestionTypeText  SuggestionType = "text"
-	SuggestionTypeUrl   SuggestionType = "url"
+	SuggestionTypeEmail              SuggestionType = "email"
+	SuggestionTypePhone              SuggestionType = "phone"
+	SuggestionTypeRequestContactInfo SuggestionType = "request_contact_info"
+	SuggestionTypeText               SuggestionType = "text"
+	SuggestionTypeUrl                SuggestionType = "url"
 )
 
 // EnumValues returns all valid values for SuggestionType.
@@ -787,6 +826,7 @@ func (SuggestionType) EnumValues() []string {
 	return []string{
 		string(SuggestionTypeEmail),
 		string(SuggestionTypePhone),
+		string(SuggestionTypeRequestContactInfo),
 		string(SuggestionTypeText),
 		string(SuggestionTypeUrl),
 	}
@@ -866,9 +906,10 @@ func (v *SystemAction) UnmarshalJSON(data []byte) error {
 
 // Defines values for TemplateButtonType.
 const (
-	TemplateButtonTypePhone TemplateButtonType = "phone"
-	TemplateButtonTypePlain TemplateButtonType = "plain"
-	TemplateButtonTypeUrl   TemplateButtonType = "url"
+	TemplateButtonTypePhone              TemplateButtonType = "phone"
+	TemplateButtonTypePlain              TemplateButtonType = "plain"
+	TemplateButtonTypeRequestContactInfo TemplateButtonType = "request_contact_info"
+	TemplateButtonTypeUrl                TemplateButtonType = "url"
 )
 
 // EnumValues returns all valid values for TemplateButtonType.
@@ -876,6 +917,7 @@ func (TemplateButtonType) EnumValues() []string {
 	return []string{
 		string(TemplateButtonTypePhone),
 		string(TemplateButtonTypePlain),
+		string(TemplateButtonTypeRequestContactInfo),
 		string(TemplateButtonTypeUrl),
 	}
 }
@@ -1091,6 +1133,7 @@ func (v *TemplateVarType) UnmarshalJSON(data []byte) error {
 // Defines values for TemplateVerificationStatus.
 const (
 	TemplateVerificationStatusApproved TemplateVerificationStatus = "approved"
+	TemplateVerificationStatusArchived TemplateVerificationStatus = "archived"
 	TemplateVerificationStatusDisabled TemplateVerificationStatus = "disabled"
 	TemplateVerificationStatusPaused   TemplateVerificationStatus = "paused"
 	TemplateVerificationStatusPending  TemplateVerificationStatus = "pending"
@@ -1101,6 +1144,7 @@ const (
 func (TemplateVerificationStatus) EnumValues() []string {
 	return []string{
 		string(TemplateVerificationStatusApproved),
+		string(TemplateVerificationStatusArchived),
 		string(TemplateVerificationStatusDisabled),
 		string(TemplateVerificationStatusPaused),
 		string(TemplateVerificationStatusPending),
@@ -1407,6 +1451,15 @@ type EditMessageRequestMessage struct {
 
 	// Text Message text
 	Text string `binding:"required,min=1,max=65535" json:"text" mod:"trim,escape"`
+}
+
+// EnsureCustomerResponse Customer prepared without creating a chat
+type EnsureCustomerResponse struct {
+	// CustomerID Internal MG customer identifier
+	CustomerID int64 `json:"customer_id"`
+
+	// Warnings Warnings that occurred while preparing a customer
+	Warnings []string `json:"warnings,omitempty"`
 }
 
 // File Uploaded file information
@@ -1781,6 +1834,9 @@ type OrderMessageSetting struct {
 // Originator Message sender type
 type Originator string
 
+// OutgoingBlockReason Reason why all external outgoing actions are blocked
+type OutgoingBlockReason string
+
 // ProductMessageSetting Product messages support
 type ProductMessageSetting struct {
 	// Creating Support for operation with messages of the given type
@@ -1931,8 +1987,9 @@ type SendingPolicy struct {
 	// NewCustomer Types of messages to send to a new customer
 	NewCustomer SendingPolicyNewCustomer `json:"new_customer,omitempty"`
 
-	// Outgoing Outgoing message support
-	Outgoing SendingPolicyOutgoing `json:"outgoing,omitempty"`
+	// Outgoing Outgoing action policy: `allowed` permits all outgoing actions supported by the channel and makes the channel available for outgoing mailings, scenarios and triggers; `restricted` excludes the channel from outgoing mailings, scenarios and triggers while independently enabled initial text and template sending remain available and other sending methods are not blocked; `blocked` prevents all external outgoing actions, including sending, editing and deleting messages, reactions and outgoing read receipts, while incoming and internal messages remain available.
+	Outgoing            SendingPolicyOutgoing `json:"outgoing,omitempty"`
+	OutgoingBlockReason *OutgoingBlockReason  `binding:"omitempty,enum-valid" json:"outgoing_block_reason,omitempty"`
 }
 
 // SendingPolicyAfterReplyTimeout Types of messages to send after response time expires
@@ -1941,7 +1998,7 @@ type SendingPolicyAfterReplyTimeout string
 // SendingPolicyNewCustomer Types of messages to send to a new customer
 type SendingPolicyNewCustomer string
 
-// SendingPolicyOutgoing Outgoing message support
+// SendingPolicyOutgoing Outgoing action policy: `allowed` permits all outgoing actions supported by the channel and makes the channel available for outgoing mailings, scenarios and triggers; `restricted` excludes the channel from outgoing mailings, scenarios and triggers while independently enabled initial text and template sending remain available and other sending methods are not blocked; `blocked` prevents all external outgoing actions, including sending, editing and deleting messages, reactions and outgoing read receipts, while incoming and internal messages remain available.
 type SendingPolicyOutgoing string
 
 // StatusSetting Transmitting message status information
@@ -1973,6 +2030,9 @@ type Suggestions struct {
 
 	// Phone Support for operation with messages of the given type
 	Phone ChannelFeature `json:"phone,omitempty"`
+
+	// RequestContactInfo Support for operation with messages of the given type
+	RequestContactInfo ChannelFeature `json:"request_contact_info,omitempty"`
 
 	// Text Support for operation with messages of the given type
 	Text ChannelFeature `json:"text,omitempty"`
@@ -2070,8 +2130,8 @@ type TemplateBase struct {
 
 // TemplateButton Template button
 type TemplateButton struct {
-	// Label Button name
-	Label string `json:"label" mod:"trim,escape"`
+	// Label Button name (not used for `request_contact_info`)
+	Label string `json:"label,omitempty" mod:"trim,escape"`
 
 	// Phone Phone number (for button type `phone`)
 	Phone *string `json:"phone,omitempty" mod:"trim,escape"`
@@ -2269,7 +2329,10 @@ type Utm struct {
 type WAChannelProperties struct {
 	ChannelQuality *WAChannelQuality `binding:"omitempty,enum-valid" json:"channel_quality,omitempty"`
 	ChannelStatus  *WAChannelStatus  `binding:"omitempty,enum-valid" json:"channel_status,omitempty"`
-	Tier           *int              `binding:"omitempty,min=0" json:"tier,omitempty"`
+
+	// SupportsFEP Allows updating the free entry point expiration time in message acknowledgements
+	SupportsFEP bool `json:"supports_fep,omitempty"`
+	Tier        *int `binding:"omitempty,min=0" json:"tier,omitempty"`
 }
 
 // WAChannelQuality WhatsApp channel quality
@@ -2386,6 +2449,9 @@ type AckMessageRequest struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	ExternalMessageID *string `binding:"omitempty,max=255" json:"external_message_id,omitempty" mod:"trim,escape"`
 
+	// FEPExpiresAt Free entry point expiration time; requires settings.whatsapp.supports_fep, omitted preserves the value, null clears it
+	FEPExpiresAt nullable.Nullable[time.Time] `json:"fep_expires_at,omitempty"`
+
 	// Message Message identifier
 	Message *MessageIdentifier `json:"message,omitempty"`
 
@@ -2476,6 +2542,15 @@ type EditMessageRequest struct {
 	// Channel Message channel
 	Channel int64                     `binding:"required" json:"channel"`
 	Message EditMessageRequestMessage `binding:"required" json:"message"`
+}
+
+// EnsureCustomerRequest defines model for EnsureCustomerRequest.
+type EnsureCustomerRequest struct {
+	// ChannelID Channel identifier
+	ChannelID int64 `binding:"required,min=1" json:"channel_id"`
+
+	// Customer Contains information about the customer sending a message
+	Customer SendMessageRequestCustomer `json:"customer"`
 }
 
 // MarkMessageReadRequest defines model for MarkMessageReadRequest.
@@ -2707,6 +2782,15 @@ type UpdateTemplateJSONBody struct {
 	VerificationStatus TemplateVerificationStatus `binding:"omitempty,enum-valid" json:"verification_status,omitempty"`
 }
 
+// EnsureCustomerJSONBody defines parameters for EnsureCustomer.
+type EnsureCustomerJSONBody struct {
+	// ChannelID Channel identifier
+	ChannelID int64 `binding:"required,min=1" json:"channel_id"`
+
+	// Customer Contains information about the customer sending a message
+	Customer SendMessageRequestCustomer `json:"customer"`
+}
+
 // UploadFileMultipartBody defines parameters for UploadFile.
 type UploadFileMultipartBody = openapi_types.File
 
@@ -2765,6 +2849,9 @@ type AckMessageJSONBody struct {
 	// ExternalMessageID External identifier of a message
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	ExternalMessageID *string `binding:"omitempty,max=255" json:"external_message_id,omitempty" mod:"trim,escape"`
+
+	// FEPExpiresAt Free entry point expiration time; requires settings.whatsapp.supports_fep, omitted preserves the value, null clears it
+	FEPExpiresAt nullable.Nullable[time.Time] `json:"fep_expires_at,omitempty"`
 
 	// Message Message identifier
 	Message *MessageIdentifier `json:"message,omitempty"`
@@ -2846,6 +2933,9 @@ type ActivateTemplateJSONRequestBody ActivateTemplateJSONBody
 
 // UpdateTemplateJSONRequestBody defines body for UpdateTemplate for application/json ContentType.
 type UpdateTemplateJSONRequestBody UpdateTemplateJSONBody
+
+// EnsureCustomerJSONRequestBody defines body for EnsureCustomer for application/json ContentType.
+type EnsureCustomerJSONRequestBody EnsureCustomerJSONBody
 
 // UploadFileMultipartRequestBody defines body for UploadFile for multipart/form-data ContentType.
 type UploadFileMultipartRequestBody = UploadFileMultipartBody
@@ -2985,6 +3075,11 @@ type ClientInterface interface {
 	UpdateTemplateWithBody(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// EnsureCustomerWithBody request with any body
+	EnsureCustomerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	EnsureCustomer(ctx context.Context, body EnsureCustomerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UploadFileWithBody request with any body
 	UploadFileWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3173,6 +3268,30 @@ func (c *Client) UpdateTemplateWithBody(ctx context.Context, channelIDPath Chann
 
 func (c *Client) UpdateTemplate(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateTemplateRequest(c.Server, channelIDPath, templateCode, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EnsureCustomerWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEnsureCustomerRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) EnsureCustomer(ctx context.Context, body EnsureCustomerJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewEnsureCustomerRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3875,6 +3994,46 @@ func NewUpdateTemplateRequestWithBody(server string, channelIDPath ChannelIDPath
 	return req, nil
 }
 
+// NewEnsureCustomerRequest calls the generic EnsureCustomer builder with application/json body
+func NewEnsureCustomerRequest(server string, body EnsureCustomerJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewEnsureCustomerRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewEnsureCustomerRequestWithBody generates requests for EnsureCustomer with any type of body
+func NewEnsureCustomerRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/customers/ensure")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewUploadFileRequestWithBody generates requests for UploadFile with any type of body
 func NewUploadFileRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -4477,6 +4636,11 @@ type ClientWithResponsesInterface interface {
 
 	UpdateTemplateWithResponse(ctx context.Context, channelIDPath ChannelIDPath, templateCode TemplateCodePath, body UpdateTemplateJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTemplateResp, error)
 
+	// EnsureCustomerWithBodyWithResponse request with any body
+	EnsureCustomerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EnsureCustomerResp, error)
+
+	EnsureCustomerWithResponse(ctx context.Context, body EnsureCustomerJSONRequestBody, reqEditors ...RequestEditorFn) (*EnsureCustomerResp, error)
+
 	// UploadFileWithBodyWithResponse request with any body
 	UploadFileWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadFileResp, error)
 
@@ -4698,6 +4862,30 @@ func (r UpdateTemplateResp) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateTemplateResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type EnsureCustomerResp struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *EnsureCustomerResponse
+	JSON201      *EnsureCustomerResponse
+	JSONDefault  *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r EnsureCustomerResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r EnsureCustomerResp) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5119,6 +5307,23 @@ func (c *ClientWithResponses) UpdateTemplateWithResponse(ctx context.Context, ch
 		return nil, err
 	}
 	return ParseUpdateTemplateResp(rsp)
+}
+
+// EnsureCustomerWithBodyWithResponse request with arbitrary body returning *EnsureCustomerResp
+func (c *ClientWithResponses) EnsureCustomerWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*EnsureCustomerResp, error) {
+	rsp, err := c.EnsureCustomerWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEnsureCustomerResp(rsp)
+}
+
+func (c *ClientWithResponses) EnsureCustomerWithResponse(ctx context.Context, body EnsureCustomerJSONRequestBody, reqEditors ...RequestEditorFn) (*EnsureCustomerResp, error) {
+	rsp, err := c.EnsureCustomer(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseEnsureCustomerResp(rsp)
 }
 
 // UploadFileWithBodyWithResponse request with arbitrary body returning *UploadFileResp
@@ -5560,6 +5765,46 @@ func ParseUpdateTemplateResp(rsp *http.Response) (*UpdateTemplateResp, error) {
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseEnsureCustomerResp parses an HTTP response from a EnsureCustomerWithResponse call
+func ParseEnsureCustomerResp(rsp *http.Response) (*EnsureCustomerResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &EnsureCustomerResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest EnsureCustomerResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest EnsureCustomerResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest ErrorResponse

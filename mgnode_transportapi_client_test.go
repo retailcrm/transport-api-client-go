@@ -2,6 +2,7 @@ package transport_api_client
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"net/http"
 	"strings"
@@ -10,6 +11,66 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestEnsureCustomerWithResponse(t *testing.T) {
+	t.Parallel()
+	dataProvider := []struct {
+		name   string
+		status int
+	}{
+		{name: "existing customer", status: http.StatusOK},
+		{name: "created customer", status: http.StatusCreated},
+		{name: "blocked customer", status: http.StatusForbidden},
+	}
+	for _, data := range dataProvider {
+		t.Run(data.name, func(t *testing.T) {
+			t.Parallel()
+			mockDoer := DoerFunc(func(request *http.Request) (*http.Response, error) {
+				require.Equal(t, http.MethodPost, request.Method)
+				require.Equal(t, "/api/transport/v1/customers/ensure", request.URL.Path)
+				require.Equal(t, "test-token", request.Header.Get("X-Transport-Token"))
+				var body EnsureCustomerJSONRequestBody
+				require.NoError(t, json.NewDecoder(request.Body).Decode(&body))
+				require.EqualValues(t, 618, body.ChannelID)
+				require.Equal(t, "new", body.Customer.ExternalID)
+				require.Equal(t, []string{"old"}, body.Customer.SecondaryExternalIDs)
+				require.NotNil(t, body.Customer.Utm)
+				require.Equal(t, "site", *body.Customer.Utm.Source)
+				response := `{"customer_id":38,"warnings":["invalid optional country"]}`
+				if data.status == http.StatusForbidden {
+					response = `{"errors":["Customer is blocked"]}`
+				}
+				return &http.Response{
+					StatusCode: data.status,
+					Header:     http.Header{"Content-Type": []string{"application/json"}},
+					Body:       io.NopCloser(strings.NewReader(response)),
+				}, nil
+			})
+			client, err := NewClientWithResponses("https://example.com/api/transport/v1",
+				WithTransportToken("test-token"), WithHTTPClient(mockDoer))
+			require.NoError(t, err)
+			source := "site"
+			response, err := client.EnsureCustomerWithResponse(t.Context(), EnsureCustomerJSONRequestBody{
+				ChannelID: 618,
+				Customer: SendMessageRequestCustomer{
+					ExternalID: "new", Nickname: "Prepared", SecondaryExternalIDs: []string{"old"}, Utm: &Utm{Source: &source},
+				},
+			})
+			if data.status == http.StatusForbidden {
+				require.EqualError(t, ExtractError(response, err), "Customer is blocked")
+				return
+			}
+			require.NoError(t, ExtractError(response, err))
+			prepared := response.JSON200
+			if data.status == http.StatusCreated {
+				prepared = response.JSON201
+			}
+			require.NotNil(t, prepared)
+			require.EqualValues(t, 38, prepared.CustomerID)
+			require.Equal(t, []string{"invalid optional country"}, prepared.Warnings)
+		})
+	}
+}
 
 func TestListChannelsWithResponse(t *testing.T) {
 	t.Parallel()

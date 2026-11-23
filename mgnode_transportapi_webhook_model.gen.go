@@ -672,6 +672,9 @@ type WebhookMessageSentData struct {
 	// Items List of media attachments in the message
 	Items []WebhookMessageFile `json:"items,omitempty"`
 
+	// MassCommunication Marks the message as part of a mass mailing
+	MassCommunication *bool `json:"mass_communication,omitempty"`
+
 	// Order Represents the details of an order within a message
 	Order *MessageOrder `json:"order,omitempty"`
 

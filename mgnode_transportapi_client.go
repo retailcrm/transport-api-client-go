@@ -46,6 +46,10 @@ func defaultResponseError(response *ErrorResponse) error {
 	return errors.New(response.Errors[0])
 }
 
+func (r EnsureCustomerResp) Error() error {
+	return defaultResponseError(r.JSONDefault)
+}
+
 func (r ListChannelsResp) Error() error {
 	return defaultResponseError(r.JSONDefault)
 }
